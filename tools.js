@@ -764,17 +764,6 @@ function renderImgen(container) {
   container.innerHTML = `
     <div class="tool-grid">
       <div class="field-group">
-        <label for="imgen-mode">Generation Mode</label>
-        <select id="imgen-mode">
-          <option value="comfyui">ComfyUI (Local)</option>
-          <option value="chatgpt">ChatGPT API (Remote)</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label for="comfyui-url">ComfyUI URL</label>
-        <input id="comfyui-url" type="text" value="http://127.0.0.1:8188" />
-      </div>
-      <div class="field-group">
         <label for="prompt">Prompt</label>
         <textarea id="prompt" rows="4" placeholder="Describe the scene or asset..."></textarea>
       </div>
@@ -790,18 +779,6 @@ function renderImgen(container) {
         <label for="dimensions">Dimensions</label>
         <input id="dimensions" type="text" value="512x512" />
       </div>
-      <div class="field-group">
-        <label for="chatgpt-model">ChatGPT Model</label>
-        <input id="chatgpt-model" type="text" value="gpt-image-1" />
-      </div>
-      <div class="field-group">
-        <label for="chatgpt-key">ChatGPT API Key</label>
-        <input id="chatgpt-key" type="password" placeholder="sk-..." />
-      </div>
-      <div class="field-group" style="grid-column: 1 / -1;">
-        <label for="comfyui-workflow">ComfyUI Workflow JSON</label>
-        <textarea id="comfyui-workflow" rows="6" placeholder='{"prompt": {...}}'></textarea>
-      </div>
       <div class="field-group" style="grid-column: 1 / -1;">
         <label for="model-notes">Model + Pipeline Notes</label>
         <textarea id="model-notes" rows="4" placeholder="Which local model or script will you run?"></textarea>
@@ -812,34 +789,23 @@ function renderImgen(container) {
       </div>
       <div class="field-group">
         <label>&nbsp;</label>
-        <button class="secondary-btn" id="send-imgen">Send Request</button>
-      </div>
-      <div class="field-group">
-        <label>&nbsp;</label>
         <button class="secondary-btn" id="download-imgen">Download JSON</button>
       </div>
     </div>
     <div class="tool-panel">
-      <div class="tool-output" id="imgen-output">Saved prompts and API responses will appear here.</div>
+      <div class="tool-output" id="imgen-output">Saved prompts will appear here.</div>
     </div>
   `;
 
-  const mode = container.querySelector('#imgen-mode');
-  const comfyUrl = container.querySelector('#comfyui-url');
   const prompt = container.querySelector('#prompt');
   const style = container.querySelector('#style');
   const negative = container.querySelector('#negative');
   const dimensions = container.querySelector('#dimensions');
-  const chatgptModel = container.querySelector('#chatgpt-model');
-  const chatgptKey = container.querySelector('#chatgpt-key');
-  const comfyWorkflow = container.querySelector('#comfyui-workflow');
   const notes = container.querySelector('#model-notes');
   const output = container.querySelector('#imgen-output');
   const saveButton = container.querySelector('#save-imgen');
-  const sendButton = container.querySelector('#send-imgen');
   const downloadButton = container.querySelector('#download-imgen');
   const storageKey = 'sorcerer-imgen-prompts';
-  const settingsKey = 'sorcerer-imgen-settings';
 
   const load = () => JSON.parse(localStorage.getItem(storageKey) || '[]');
   const save = (data) => localStorage.setItem(storageKey, JSON.stringify(data));
@@ -849,121 +815,18 @@ function renderImgen(container) {
 
   updateOutput(load());
 
-  const settings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
-  if (settings.mode) mode.value = settings.mode;
-  if (settings.comfyUrl) comfyUrl.value = settings.comfyUrl;
-  if (settings.chatgptModel) chatgptModel.value = settings.chatgptModel;
-  if (settings.comfyWorkflow) comfyWorkflow.value = settings.comfyWorkflow;
-  if (settings.notes) notes.value = settings.notes;
-
-  const persistSettings = () => {
-    localStorage.setItem(settingsKey, JSON.stringify({
-      mode: mode.value,
-      comfyUrl: comfyUrl.value.trim(),
-      chatgptModel: chatgptModel.value.trim(),
-      comfyWorkflow: comfyWorkflow.value.trim(),
-      notes: notes.value.trim(),
-    }));
-  };
-
-  mode.addEventListener('change', persistSettings);
-  comfyUrl.addEventListener('change', persistSettings);
-  chatgptModel.addEventListener('change', persistSettings);
-  comfyWorkflow.addEventListener('change', persistSettings);
-  notes.addEventListener('change', persistSettings);
-
   saveButton.addEventListener('click', () => {
     const entry = {
       prompt: prompt.value.trim(),
       style: style.value.trim(),
       negative: negative.value.trim(),
       dimensions: dimensions.value.trim(),
-      mode: mode.value,
-      comfyUiUrl: comfyUrl.value.trim(),
-      chatgptModel: chatgptModel.value.trim(),
       notes: notes.value.trim(),
       updatedAt: new Date().toISOString(),
     };
     const next = [entry, ...load()].slice(0, 20);
     save(next);
     updateOutput(next);
-  });
-
-  sendButton.addEventListener('click', async () => {
-    const payload = {
-      prompt: prompt.value.trim(),
-      style: style.value.trim(),
-      negative: negative.value.trim(),
-      dimensions: dimensions.value.trim(),
-      notes: notes.value.trim(),
-    };
-
-    if (mode.value === 'comfyui') {
-      let workflowPayload = null;
-      try {
-        workflowPayload = comfyWorkflow.value.trim()
-          ? JSON.parse(comfyWorkflow.value.trim())
-          : null;
-      } catch (error) {
-        updateOutput({ error: 'Invalid workflow JSON.' });
-        return;
-      }
-
-      const requestBody = workflowPayload || {
-        prompt: {
-          text: payload.prompt,
-          style: payload.style,
-          negative: payload.negative,
-          size: payload.dimensions,
-        },
-      };
-
-      try {
-        const response = await fetch(`${comfyUrl.value.replace(/\\/$/, '')}/prompt`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
-        });
-        const result = await response.json();
-        updateOutput({ requestBody, result });
-      } catch (error) {
-        updateOutput({ error: 'Failed to reach ComfyUI. Ensure it is running locally.', details: String(error) });
-      }
-      return;
-    }
-
-    const apiRequest = {
-      model: chatgptModel.value.trim() || 'gpt-image-1',
-      prompt: payload.prompt,
-      size: payload.dimensions || '512x512',
-    };
-
-    const curl = [
-      'curl https://api.openai.com/v1/images/generations \\',
-      '  -H \"Content-Type: application/json\" \\',
-      `  -H \"Authorization: Bearer ${chatgptKey.value.trim() || 'YOUR_API_KEY'}\" \\`,
-      `  -d '${JSON.stringify(apiRequest)}'`,
-    ].join('\n');
-
-    if (!chatgptKey.value.trim()) {
-      updateOutput({ apiRequest, curl, warning: 'Add an API key to send the request.' });
-      return;
-    }
-
-    try {
-      const response = await fetch('https://api.openai.com/v1/images/generations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${chatgptKey.value.trim()}`,
-        },
-        body: JSON.stringify(apiRequest),
-      });
-      const result = await response.json();
-      updateOutput({ apiRequest, result });
-    } catch (error) {
-      updateOutput({ apiRequest, curl, error: 'ChatGPT API request failed. Use the curl command locally.', details: String(error) });
-    }
   });
 
   downloadButton.addEventListener('click', () => {
@@ -1043,10 +906,6 @@ function renderBgRemover(container) {
   container.innerHTML = `
     <div class="tool-grid">
       <div class="field-group">
-        <label for="bg-upload">Upload Image</label>
-        <input id="bg-upload" type="file" accept="image/*" />
-      </div>
-      <div class="field-group">
         <label for="bg-file">Asset Name</label>
         <input id="bg-file" type="text" placeholder="hero-portrait.png" />
       </div>
@@ -1072,18 +931,13 @@ function renderBgRemover(container) {
       </div>
     </div>
     <div class="tool-panel">
-      <div class="canvas-frame" style="margin-bottom: 12px;">
-        <img id="bg-preview" alt="Preview" style="max-width: 100%; display: none;" />
-      </div>
       <div class="tool-output" id="bg-output">Queued tasks will appear here.</div>
     </div>
   `;
 
-  const upload = container.querySelector('#bg-upload');
   const file = container.querySelector('#bg-file');
   const method = container.querySelector('#bg-method');
   const notes = container.querySelector('#bg-notes');
-  const preview = container.querySelector('#bg-preview');
   const output = container.querySelector('#bg-output');
   const saveButton = container.querySelector('#save-bg');
   const downloadButton = container.querySelector('#download-bg');
@@ -1096,16 +950,6 @@ function renderBgRemover(container) {
   };
 
   updateOutput(load());
-
-  upload.addEventListener('change', (event) => {
-    const selected = event.target.files[0];
-    if (!selected) return;
-    preview.src = URL.createObjectURL(selected);
-    preview.style.display = 'block';
-    if (!file.value.trim()) {
-      file.value = selected.name;
-    }
-  });
 
   saveButton.addEventListener('click', () => {
     const entry = {
@@ -1128,10 +972,6 @@ function renderExpander(container) {
   container.innerHTML = `
     <div class="tool-grid">
       <div class="field-group">
-        <label for="expand-upload">Upload Image</label>
-        <input id="expand-upload" type="file" accept="image/*" />
-      </div>
-      <div class="field-group">
         <label for="expand-asset">Asset Name</label>
         <input id="expand-asset" type="text" placeholder="forest-background.png" />
       </div>
@@ -1153,18 +993,13 @@ function renderExpander(container) {
       </div>
     </div>
     <div class="tool-panel">
-      <div class="canvas-frame" style="margin-bottom: 12px;">
-        <img id="expand-preview" alt="Preview" style="max-width: 100%; display: none;" />
-      </div>
       <div class="tool-output" id="expand-output">Expansion tasks will appear here.</div>
     </div>
   `;
 
-  const upload = container.querySelector('#expand-upload');
   const asset = container.querySelector('#expand-asset');
   const size = container.querySelector('#expand-size');
   const notes = container.querySelector('#expand-notes');
-  const preview = container.querySelector('#expand-preview');
   const output = container.querySelector('#expand-output');
   const saveButton = container.querySelector('#save-expand');
   const downloadButton = container.querySelector('#download-expand');
@@ -1177,16 +1012,6 @@ function renderExpander(container) {
   };
 
   updateOutput(load());
-
-  upload.addEventListener('change', (event) => {
-    const selected = event.target.files[0];
-    if (!selected) return;
-    preview.src = URL.createObjectURL(selected);
-    preview.style.display = 'block';
-    if (!asset.value.trim()) {
-      asset.value = selected.name;
-    }
-  });
 
   saveButton.addEventListener('click', () => {
     const entry = {
