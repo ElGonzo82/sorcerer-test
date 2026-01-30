@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sorcerer Local - Game Creation Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-nav">
+    <div class="nav-brand">SORCERER LOCAL</div>
+    <nav class="nav-links">
+      <a href="#tools">Tools</a>
+      <a href="#design">Design</a>
+      <a href="#games">Games</a>
+      <a href="#utils">Batch Utils</a>
+      <a href="tool.html?tool=notes">Notes</a>
+    </nav>
+    <button class="nav-folder-btn" id="open-folder" title="Open local folder helper">📁</button>
+  </header>
+
+  <div class="bg-effects">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-logo-block">
+        <div class="hero-logo">SORCERER</div>
+        <div class="hero-subtitle">Game Creation Engine</div>
+      </div>
+
+      <p class="hero-description">
+        This is a local, offline-friendly recreation of the Sorcerer tool hub. It focuses on
+        core utilities you can run entirely in your browser: asset prep, previews, and lightweight
+        editing workflows to speed up your game development.
+      </p>
+
+      <div class="hero-primary-cta">
+        <a class="hero-main-btn" href="#tools">
+          <span class="btn-icon">✨</span>
+          Launch the Tool Suite
+        </a>
+        <p class="hero-price-tag">No sign-in required — everything runs locally.</p>
+      </div>
+
+      <div class="hero-badges">
+        <div class="badge">
+          <span class="badge-icon">🤖</span>
+          AI-ready workflows
+        </div>
+        <div class="badge">
+          <span class="badge-icon">💻</span>
+          Local-first
+        </div>
+        <div class="badge">
+          <span class="badge-icon">🔗</span>
+          Works with any IDE
+        </div>
+      </div>
+    </section>
+
+    <section id="tools">
+      <h2 class="section-title">🎨 Editor Tools</h2>
+      <p class="section-subtitle">Process, analyze, and enhance your game assets locally.</p>
+      <div class="tools-grid">
+        <a class="tool-card" href="tool.html?tool=sprite-analyzer">
+          <div class="tool-icon">🖼️</div>
+          <div class="tool-name">Sprite Analyzer</div>
+          <div class="tool-description">Upload spritesheets, preview animations, detect grids, and export frame data.</div>
+          <div class="tool-tags"><span class="tool-tag tag-upload">Upload &amp; Preview</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=sfx-editor">
+          <div class="tool-icon">🔊</div>
+          <div class="tool-name">SFX Editor</div>
+          <div class="tool-description">Quickly audition, trim, and normalize audio clips with local playback tools.</div>
+          <div class="tool-tags"><span class="tool-tag tag-upload">Upload &amp; Edit</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=tilesets">
+          <div class="tool-icon">🗺️</div>
+          <div class="tool-name">Tilesets</div>
+          <div class="tool-description">Preview tilesets as repeatable textures and inspect seamless edges.</div>
+          <div class="tool-tags"><span class="tool-tag tag-upload">Upload &amp; Preview</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=slicer">
+          <div class="tool-icon">✂️</div>
+          <div class="tool-name">Slicer</div>
+          <div class="tool-description">Slice spritesheets into frames and download individual PNGs.</div>
+          <div class="tool-tags"><span class="tool-tag tag-upload">Slice &amp; Download</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=bg-remover">
+          <div class="tool-icon">🪄</div>
+          <div class="tool-name">BG Remover</div>
+          <div class="tool-description">Local checklist and queue for background removal tasks.</div>
+          <div class="tool-tags"><span class="tool-tag tag-ai">AI Tool</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=expander">
+          <div class="tool-icon">🔲</div>
+          <div class="tool-name">Expander</div>
+          <div class="tool-description">Track outpainting tasks for local image expansion workflows.</div>
+          <div class="tool-tags"><span class="tool-tag tag-ai">AI Tool</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="design">
+      <h2 class="section-title">🛠️ Design Tools</h2>
+      <p class="section-subtitle">Visual effects and creation helpers.</p>
+      <div class="tools-grid">
+        <a class="tool-card" href="tool.html?tool=particle-designer">
+          <div class="tool-icon">💫</div>
+          <div class="tool-name">Particle Designer</div>
+          <div class="tool-description">Use local presets and export helper code for Phaser-style emitters.</div>
+          <div class="tool-tags"><span class="tool-tag tag-vfx">VFX Creator</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=spelljammer">
+          <div class="tool-icon">🔮</div>
+          <div class="tool-name">Spelljammer</div>
+          <div class="tool-description">Sketch spell effect recipes and save them to local JSON.</div>
+          <div class="tool-tags"><span class="tool-tag tag-vfx">VFX Creator</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=imgen">
+          <div class="tool-icon">🎨</div>
+          <div class="tool-name">ImGen</div>
+          <div class="tool-description">Notes + prompt builder for your preferred local image model.</div>
+          <div class="tool-tags"><span class="tool-tag tag-ai">AI Tool</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=vidgen">
+          <div class="tool-icon">🎬</div>
+          <div class="tool-name">VidGen</div>
+          <div class="tool-description">Storyboard helper for local video generation pipelines.</div>
+          <div class="tool-tags"><span class="tool-tag tag-ai">AI Tool</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="games">
+      <h2 class="section-title">🎮 Game Tools</h2>
+      <p class="section-subtitle">Local testing utilities.</p>
+      <div class="tools-grid">
+        <a class="tool-card" href="tool.html?tool=games">
+          <div class="tool-icon">🎮</div>
+          <div class="tool-name">Games</div>
+          <div class="tool-description">Launch your local builds in a responsive preview frame.</div>
+          <div class="tool-tags"><span class="tool-tag tag-free">Device Preview</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=layout">
+          <div class="tool-icon">📐</div>
+          <div class="tool-name">Layout</div>
+          <div class="tool-description">Test device breakpoints with common resolutions.</div>
+          <div class="tool-tags"><span class="tool-tag tag-free">Device Preview</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=notes">
+          <div class="tool-icon">📝</div>
+          <div class="tool-name">Notes</div>
+          <div class="tool-description">Persistent local notes for your project.</div>
+          <div class="tool-tags"><span class="tool-tag tag-free">Auto-Save</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="utils">
+      <h2 class="section-title">🧰 Batch Processing Utils</h2>
+      <p class="section-subtitle">Browser-based file conversion and optimization tools.</p>
+      <div class="tools-grid">
+        <a class="tool-card" href="tool.html?tool=utils">
+          <div class="tool-icon">📸</div>
+          <div class="tool-name">Image Utilities</div>
+          <div class="tool-description">Resize, compress, and convert images directly in your browser.</div>
+          <div class="tool-tags"><span class="tool-tag tag-upload">Browser-Based</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=audio-utils">
+          <div class="tool-icon">🎵</div>
+          <div class="tool-name">Audio Utilities</div>
+          <div class="tool-description">Normalize, trim, and export quick audio clips.</div>
+          <div class="tool-tags"><span class="tool-tag tag-free">Offline</span></div>
+        </a>
+        <a class="tool-card" href="tool.html?tool=video-utils">
+          <div class="tool-icon">🎥</div>
+          <div class="tool-name">Video Utilities</div>
+          <div class="tool-description">Checklist + presets for FFmpeg-based workflows.</div>
+          <div class="tool-tags"><span class="tool-tag tag-free">Requires FFmpeg</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="cta-content">
+        <div class="cta-badge">Ready to Create?</div>
+        <h2 class="cta-title">Start Building Games Today</h2>
+        <p class="cta-subtitle">
+          Everything here runs locally. Use these tools alongside your IDE and existing pipelines,
+          or swap in your own AI backends as needed.
+        </p>
+        <div class="cta-buttons">
+          <a class="cta-btn-primary" href="#tools">Open the Tool Suite →</a>
+          <a class="cta-btn-secondary" href="tool.html?tool=notes">Jump to Notes</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-text">SORCERER LOCAL • Offline Tool Hub</div>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
